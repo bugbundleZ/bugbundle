@@ -1,0 +1,52 @@
+name: Bug report
+description: Report a reproducible BugBundle defect
+title: "[Bug]: "
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste secrets or proprietary source. Run `bugbundle preview` before sharing an archive.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide the smallest safe command or public repository that demonstrates the problem.
+      placeholder: |
+        Command:
+        Expected exit/output:
+        Actual exit/output:
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: BugBundle version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: Operating system
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I reviewed all content and removed secrets and proprietary information.
+          required: true

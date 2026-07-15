@@ -1,0 +1,44 @@
+{
+  "name": "bugbundle",
+  "version": "0.1.0",
+  "description": "Capture privacy-safe, executable bug reproduction bundles",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bugbundleZ/bugbundle.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/bugbundleZ/bugbundle#readme",
+  "bugs": {
+    "url": "https://github.com/bugbundleZ/bugbundle/issues"
+  },
+  "type": "module",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "bug-report",
+    "debugging",
+    "minimal-reproduction",
+    "open-source",
+    "cli"
+  ],
+  "bin": {
+    "bugbundle": "dist/index.js"
+  },
+  "exports": "./dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@bugbundle/core": "workspace:*"
+  }
+}
