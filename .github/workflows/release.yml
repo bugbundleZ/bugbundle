@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Use OIDC-capable npm
+        run: npm install --global npm@11.15.0
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm build
+      - name: Verify release version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          core_version=$(node -p "require('./packages/core/package.json').version")
+          cli_version=$(node -p "require('./packages/cli/package.json').version")
+          test "$core_version" = "$cli_version"
+          test "$RELEASE_TAG" = "v$cli_version"
+      - name: Pack publishable artifacts
+        run: |
+          mkdir artifacts
+          pnpm --dir packages/core pack --pack-destination "$GITHUB_WORKSPACE/artifacts"
+          pnpm --dir packages/cli pack --pack-destination "$GITHUB_WORKSPACE/artifacts"
+      - name: Publish core
+        run: npm publish artifacts/bugbundle-core-*.tgz --access public
+      - name: Publish CLI
+        run: npm publish artifacts/bugbundle-[0-9]*.tgz --access public
