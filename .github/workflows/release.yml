@@ -29,6 +29,7 @@ jobs:
       - run: pnpm check
       - run: pnpm build
       - name: Verify release version
+        id: version
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
@@ -36,12 +37,30 @@ jobs:
           cli_version=$(node -p "require('./packages/cli/package.json').version")
           test "$core_version" = "$cli_version"
           test "$RELEASE_TAG" = "v$cli_version"
+          echo "value=$cli_version" >> "$GITHUB_OUTPUT"
+      - name: Check existing registry versions
+        id: registry
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          if npm view "@bugbundle/core@$VERSION" version >/dev/null 2>&1; then
+            echo "core_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "core_exists=false" >> "$GITHUB_OUTPUT"
+          fi
+          if npm view "bugbundle@$VERSION" version >/dev/null 2>&1; then
+            echo "cli_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "cli_exists=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Pack publishable artifacts
         run: |
           mkdir artifacts
           pnpm --dir packages/core pack --pack-destination "$GITHUB_WORKSPACE/artifacts"
           pnpm --dir packages/cli pack --pack-destination "$GITHUB_WORKSPACE/artifacts"
       - name: Publish core
+        if: steps.registry.outputs.core_exists != 'true'
         run: npm publish artifacts/bugbundle-core-*.tgz --access public
       - name: Publish CLI
+        if: steps.registry.outputs.cli_exists != 'true'
         run: npm publish artifacts/bugbundle-[0-9]*.tgz --access public
