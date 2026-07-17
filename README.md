@@ -2,21 +2,32 @@
 
 BugBundle captures a failing command as a privacy-safe, executable bug report artifact.
 
-> Early development: the bundle format and CLI are not stable yet.
+It runs locally, requires no account or network connection, and never uploads the bundle. The project is in the experimental `0.x` series, so review release notes before upgrading.
 
-## Prototype
+## Quick start
 
 ```bash
-pnpm install
-pnpm build
-node packages/cli/dist/index.js init
-node packages/cli/dist/index.js preview
-node packages/cli/dist/index.js capture --output bugbundle.zip -- node -e "console.error('failed'); process.exit(1)"
-node packages/cli/dist/index.js inspect bugbundle.zip
-node packages/cli/dist/index.js verify bugbundle.zip
+npx bugbundle init
+npx bugbundle preview
+npx bugbundle capture --output bugbundle.zip -- npm test
+npx bugbundle inspect bugbundle.zip
+npx bugbundle verify bugbundle.zip
 ```
 
-The prototype writes a deterministic ZIP containing a manifest, redacted logs, and an allowlisted set of project metadata files. It never uploads data. `verify` checks file hashes without executing anything; pass `--run` only when you trust the bundle and explicitly want to replay its command.
+Install it globally if you use it frequently:
+
+```bash
+npm install --global bugbundle
+```
+
+BugBundle writes a deterministic ZIP containing a manifest, redacted logs, and an allowlisted set of project metadata files. `verify` checks file hashes without executing anything; pass `--run` only when you trust the bundle and explicitly want to replay its command.
+
+Every operational command supports `--json` for scripts and AI tools. Successful results go to stdout, structured errors go to stderr, and exit codes remain stable: `0` for success, `1` for runtime or replay mismatch, and `2` for invalid usage.
+
+```bash
+bugbundle capture --json --output bugbundle.zip -- npm test
+bugbundle verify --json bugbundle.zip
+```
 
 ## File allowlist
 
@@ -52,3 +63,5 @@ pnpm build
 See [selection research](docs/selection-research.md) for the product rationale and validation targets.
 
 See [bundle format](docs/bundle-format.md) for the current archive contract and security model.
+
+Report bugs and feature requests in [GitHub Issues](https://github.com/bugbundleZ/bugbundle/issues).
