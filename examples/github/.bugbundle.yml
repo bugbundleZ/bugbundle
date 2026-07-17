@@ -1,0 +1,21 @@
+# Copy this file to the repository root and review every include pattern.
+schemaVersion: 1
+files:
+  include:
+    - package.json
+    - package-lock.json
+    - pnpm-lock.yaml
+    - yarn.lock
+    - bun.lock
+    - tsconfig.json
+    - vite.config.{js,mjs,ts}
+    - vitest.config.{js,mjs,ts}
+    # Add the smallest safe source pattern required by your reproduction:
+    # - src/**/*.ts
+  exclude:
+    - node_modules/**
+    - .git/**
+    - dist/**
+    - coverage/**
+  maxFiles: 100
+  maxFileBytes: 2097152

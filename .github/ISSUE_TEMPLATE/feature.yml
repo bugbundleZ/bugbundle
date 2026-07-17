@@ -1,0 +1,33 @@
+name: Feature request
+description: Propose a focused improvement to BugBundle
+title: "[Feature]: "
+labels: [enhancement, needs-triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Maintainer problem
+      description: What bug-report or reproduction workflow is difficult today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed improvement
+      description: Describe the smallest change that would improve the workflow.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: How do you handle this today?
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Project constraints
+      options:
+        - label: The deterministic offline core can remain usable without an AI model.
+          required: true
+        - label: I have not included secrets, proprietary source code, or an unreviewed bundle.
+          required: true

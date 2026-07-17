@@ -4,6 +4,11 @@ All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.
 
 ## [Unreleased]
 
+### Added
+
+- a copy-paste GitHub adoption kit with a maintainer policy and reproducible bug-report Issue Form; and
+- a public design-partner pilot and feature-request workflow.
+
 ## [0.2.0] - 2026-07-17
 
 ### Added
