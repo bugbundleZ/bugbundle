@@ -60,7 +60,7 @@ jobs:
           pnpm --dir packages/cli pack --pack-destination "$GITHUB_WORKSPACE/artifacts"
       - name: Publish core
         if: steps.registry.outputs.core_exists != 'true'
-        run: npm publish artifacts/bugbundle-core-*.tgz --access public
+        run: npm publish ./artifacts/bugbundle-core-*.tgz --access public
       - name: Publish CLI
         if: steps.registry.outputs.cli_exists != 'true'
-        run: npm publish artifacts/bugbundle-[0-9]*.tgz --access public
+        run: npm publish ./artifacts/bugbundle-[0-9]*.tgz --access public
