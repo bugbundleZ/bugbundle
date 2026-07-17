@@ -1,0 +1,60 @@
+name: Reproducible bug report
+description: Report a failure with a reviewed BugBundle
+title: "[Bug]: "
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us reproduce the problem.
+
+        Run these commands from a safe reproduction project. Replace `npm test` if the maintainer documents another command.
+
+        ```bash
+        npx bugbundle@0.2.0 preview
+        npx bugbundle@0.2.0 capture --output bugbundle.zip -- npm test
+        npx bugbundle@0.2.0 inspect bugbundle.zip
+        ```
+
+        Review the complete ZIP before uploading it. Never attach secrets or proprietary source code.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: bundle
+    attributes:
+      label: Reviewed BugBundle
+      description: Drag `bugbundle.zip` here after reviewing its complete contents.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: BugBundle version
+      placeholder: 0.2.0
+    validations:
+      required: true
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: Operating system
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I ran `bugbundle preview` and reviewed every file in the bundle.
+          required: true
+        - label: The bundle contains no secrets or proprietary source code.
+          required: true

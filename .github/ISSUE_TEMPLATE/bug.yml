@@ -29,7 +29,7 @@ body:
     id: version
     attributes:
       label: BugBundle version
-      placeholder: 0.1.0
+      placeholder: 0.2.0
     validations:
       required: true
   - type: dropdown
@@ -43,6 +43,11 @@ body:
         - Other
     validations:
       required: true
+  - type: textarea
+    id: bundle
+    attributes:
+      label: Reviewed BugBundle (optional)
+      description: Drag a ZIP here only after running `bugbundle preview` and reviewing its complete contents. Never upload secrets or proprietary source.
   - type: checkboxes
     id: safety
     attributes:

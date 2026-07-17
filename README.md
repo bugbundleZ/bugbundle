@@ -1,5 +1,10 @@
 # BugBundle
 
+[![CI](https://github.com/bugbundleZ/bugbundle/actions/workflows/ci.yml/badge.svg)](https://github.com/bugbundleZ/bugbundle/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/bugbundle.svg)](https://www.npmjs.com/package/bugbundle)
+[![npm downloads](https://img.shields.io/npm/dm/bugbundle.svg)](https://www.npmjs.com/package/bugbundle)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 BugBundle captures a failing command as a privacy-safe, executable bug report artifact.
 
 It runs locally, requires no account or network connection, and never uploads the bundle. The project is in the experimental `0.x` series, so review release notes before upgrading.
@@ -28,6 +33,12 @@ Every operational command supports `--json` for scripts and AI tools. Successful
 bugbundle capture --json --output bugbundle.zip -- npm test
 bugbundle verify --json bugbundle.zip
 ```
+
+## Adopt it in your project
+
+The [GitHub adoption kit](examples/github/README.md) contains a maintainer-owned policy and Issue Form that you can copy into a Node.js repository. Review the allowlist and replace the example test command before publishing the form.
+
+We are recruiting five Node.js CLI, build-tool, or library maintainers for a hands-on design-partner pilot. [Introduce your repository in the pilot discussion](https://github.com/bugbundleZ/bugbundle/discussions/9).
 
 ## File allowlist
 
