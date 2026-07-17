@@ -4,6 +4,16 @@ All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.
 
 ## [Unreleased]
 
+### Added
+
+- machine-readable `--json` output for `init` and `capture`;
+- structured JSON usage and runtime errors for automation; and
+- npm-based Quick Start documentation for the published CLI.
+
+### Changed
+
+- reject unknown and extra `inspect` or `verify` arguments instead of silently ignoring them.
+
 ## [0.1.0] - 2026-07-11
 
 ### Added

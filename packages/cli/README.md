@@ -10,3 +10,5 @@ npx bugbundle verify issue.zip
 ```
 
 Verification does not execute code. Replaying a bundle requires the explicit `--run` option. Review files with `bugbundle preview` before sharing an archive.
+
+Use `--json` with `init`, `preview`, `capture`, `inspect`, or `verify` for machine-readable stdout and structured errors on stderr.

@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { mkdtemp, writeFile } from "node:fs/promises";
+import { mkdtemp, realpath, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
@@ -12,23 +12,49 @@ describe("bugbundle CLI", () => {
     await expect(run(["--help"])).resolves.toMatchObject({ code: 0, stderr: "" });
     await expect(run(["unknown"])).resolves.toMatchObject({ code: 2 });
     await expect(run(["capture"])).resolves.toMatchObject({ code: 2 });
+
+    const jsonError = await run(["unknown", "--json"]);
+    expect(jsonError.code).toBe(2);
+    expect(JSON.parse(jsonError.stderr)).toEqual({
+      error: { code: "USAGE_ERROR", message: "Unknown command: unknown" },
+    });
+
+    const unknownOption = await run(["inspect", "bundle.zip", "--unknown", "--json"]);
+    expect(unknownOption.code).toBe(2);
+    expect(JSON.parse(unknownOption.stderr).error.code).toBe("USAGE_ERROR");
+
+    const extraBundle = await run(["verify", "one.zip", "two.zip", "--json"]);
+    expect(extraBundle.code).toBe(2);
+    expect(JSON.parse(extraBundle.stderr).error.message).toBe("Unexpected verify argument: two.zip");
+
+    const missingOutput = await run(["capture", "--output", "--json", "--", process.execPath]);
+    expect(missingOutput.code).toBe(2);
+    expect(JSON.parse(missingOutput.stderr).error.message).toBe("--output requires <file>");
   });
 
   it("runs init, preview, capture, inspect, and verify as a black box", async () => {
     const cwd = await mkdtemp(join(tmpdir(), "bugbundle-cli-"));
     await writeFile(join(cwd, "package.json"), "{\"name\":\"cli-fixture\"}\n");
 
-    expect((await run(["init"], cwd)).code).toBe(0);
-    expect((await run(["init"], cwd)).code).toBe(1);
+    const initialized = await run(["init", "--json"], cwd);
+    expect(initialized.code).toBe(0);
+    expect(await realpath(JSON.parse(initialized.stdout).configPath)).toBe(await realpath(join(cwd, ".bugbundle.yml")));
+
+    const duplicateInit = await run(["init", "--json"], cwd);
+    expect(duplicateInit.code).toBe(1);
+    expect(JSON.parse(duplicateInit.stderr).error.code).toBe("RUNTIME_ERROR");
     const preview = await run(["preview", "--json"], cwd);
     expect(preview.code).toBe(0);
     expect(JSON.parse(preview.stdout).files).toHaveLength(2);
 
     const capture = await run(
-      ["capture", "--output", "issue.zip", "--", process.execPath, "-e", "process.exit(6)"],
+      ["capture", "--output", "issue.zip", "--json", "--", process.execPath, "-e", "process.exit(6)"],
       cwd,
     );
     expect(capture.code).toBe(0);
+    const captureResult = JSON.parse(capture.stdout);
+    expect(await realpath(captureResult.bundlePath)).toBe(await realpath(join(cwd, "issue.zip")));
+    expect(captureResult.manifest).toMatchObject({ result: { exitCode: 6 } });
     expect((await run(["inspect", "issue.zip", "--json"], cwd)).code).toBe(0);
     expect((await run(["verify", "issue.zip"], cwd)).code).toBe(0);
 
