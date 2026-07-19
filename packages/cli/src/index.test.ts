@@ -73,7 +73,7 @@ describe("bugbundle CLI", () => {
     expect(await realpath(result.githubIssueFormPath)).toBe(
       await realpath(join(cwd, ".github", "ISSUE_TEMPLATE", "bug-report.yml")),
     );
-    await expect(readFile(result.githubIssueFormPath, "utf8")).resolves.toContain("npx bugbundle@0.2.0 preview");
+    await expect(readFile(result.githubIssueFormPath, "utf8")).resolves.toContain("npx bugbundle@0.3.0 preview");
 
     const duplicate = await run(["init", "--github", "--json"], cwd);
     expect(duplicate.code).toBe(1);
