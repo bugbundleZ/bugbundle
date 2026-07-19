@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { mkdtemp, realpath, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, realpath, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
@@ -61,6 +61,23 @@ describe("bugbundle CLI", () => {
     const replay = await run(["verify", "issue.zip", "--run", "--json"], cwd);
     expect(replay.code).toBe(0);
     expect(JSON.parse(replay.stdout).replay).toMatchObject({ exitCode: 6, matched: true });
+  });
+
+  it("installs the GitHub adoption files with stable JSON output", async () => {
+    const cwd = await mkdtemp(join(tmpdir(), "bugbundle-cli-github-"));
+    const initialized = await run(["init", "--github", "--json"], cwd);
+
+    expect(initialized.code).toBe(0);
+    const result = JSON.parse(initialized.stdout);
+    expect(await realpath(result.configPath)).toBe(await realpath(join(cwd, ".bugbundle.yml")));
+    expect(await realpath(result.githubIssueFormPath)).toBe(
+      await realpath(join(cwd, ".github", "ISSUE_TEMPLATE", "bug-report.yml")),
+    );
+    await expect(readFile(result.githubIssueFormPath, "utf8")).resolves.toContain("npx bugbundle@0.2.0 preview");
+
+    const duplicate = await run(["init", "--github", "--json"], cwd);
+    expect(duplicate.code).toBe(1);
+    expect(JSON.parse(duplicate.stderr).error).toMatchObject({ code: "RUNTIME_ERROR" });
   });
 });
 
