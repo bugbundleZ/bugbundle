@@ -20,3 +20,5 @@ export type {
   VerifyResult,
 } from "./types.js";
 export { redactText } from "./redact.js";
+export { GITHUB_ISSUE_FORM, writeGitHubSetup } from "./github-setup.js";
+export type { GitHubSetupOptions, GitHubSetupResult } from "./github-setup.js";

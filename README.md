@@ -36,7 +36,13 @@ bugbundle verify --json bugbundle.zip
 
 ## Adopt it in your project
 
-The [GitHub adoption kit](examples/github/README.md) contains a maintainer-owned policy and Issue Form that you can copy into a Node.js repository. Review the allowlist and replace the example test command before publishing the form.
+Install a maintainer-owned policy and GitHub Issue Form in one command:
+
+```bash
+npx bugbundle init --github
+```
+
+This creates `.bugbundle.yml` and `.github/ISSUE_TEMPLATE/bug-report.yml`. It refuses to overwrite either file unless you explicitly pass `--force`. Review the allowlist and replace the example `npm test` command before publishing the form. The [GitHub adoption kit](examples/github/README.md) documents the generated files and safety checklist.
 
 We are recruiting five Node.js CLI, build-tool, or library maintainers for a hands-on design-partner pilot. [Introduce your repository in the pilot discussion](https://github.com/bugbundleZ/bugbundle/discussions/9).
 

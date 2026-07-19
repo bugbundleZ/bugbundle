@@ -1,16 +1,18 @@
 #!/usr/bin/env node
+import { readFile } from "node:fs/promises";
 import {
   captureCommand,
   inspectBundle,
   previewProjectFiles,
   verifyBundle,
   writeDefaultConfig,
+  writeGitHubSetup,
 } from "@bugbundle/core";
 
 const HELP = `BugBundle captures and verifies local bug report artifacts.
 
 Usage:
-  bugbundle init [--force] [--json]
+  bugbundle init [--github] [--force] [--json]
   bugbundle preview [--json]
   bugbundle capture [--output <file>] [--json] -- <command> [arguments...]
   bugbundle inspect <bundle.zip> [--json]
@@ -37,12 +39,23 @@ async function main(args: readonly string[]): Promise<number> {
 
 async function init(args: readonly string[]): Promise<number> {
   const json = args.includes("--json");
-  const unknown = args.filter((value) => value !== "--force" && value !== "--json");
+  const unknown = args.filter((value) => value !== "--github" && value !== "--force" && value !== "--json");
   if (unknown.length > 0) return usageError(`Unknown init option: ${unknown[0]}`, json);
-  const path = await writeDefaultConfig(process.cwd(), args.includes("--force"));
-  if (json) process.stdout.write(`${JSON.stringify({ configPath: path }, null, 2)}\n`);
-  else process.stdout.write(`${path}\n`);
+  const force = args.includes("--force");
+  const result = args.includes("--github")
+    ? await writeGitHubSetup(process.cwd(), { force, cliVersion: await readCliVersion() })
+    : { configPath: await writeDefaultConfig(process.cwd(), force) };
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  else process.stdout.write(`${Object.values(result).join("\n")}\n`);
   return 0;
+}
+
+async function readCliVersion(): Promise<string> {
+  const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8")) as {
+    version?: unknown;
+  };
+  if (typeof packageJson.version !== "string") throw new Error("BugBundle package version is missing");
+  return packageJson.version;
 }
 
 async function preview(args: readonly string[]): Promise<number> {
