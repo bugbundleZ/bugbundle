@@ -4,9 +4,11 @@ All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-19
+
 ### Added
 
-- a copy-paste GitHub adoption kit with a maintainer policy and reproducible bug-report Issue Form; and
+- a copy-paste GitHub adoption kit with a maintainer policy and reproducible bug-report Issue Form;
 - a public design-partner pilot and feature-request workflow; and
 - `bugbundle init --github` for safe, one-command installation of the policy and Issue Form.
 

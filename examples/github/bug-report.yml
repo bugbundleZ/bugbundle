@@ -11,9 +11,9 @@ body:
         Run these commands from a safe reproduction project. Replace `npm test` if the maintainer documents another command.
 
         ```bash
-        npx bugbundle@0.2.0 preview
-        npx bugbundle@0.2.0 capture --output bugbundle.zip -- npm test
-        npx bugbundle@0.2.0 inspect bugbundle.zip
+        npx bugbundle@0.3.0 preview
+        npx bugbundle@0.3.0 capture --output bugbundle.zip -- npm test
+        npx bugbundle@0.3.0 inspect bugbundle.zip
         ```
 
         Review the complete ZIP before uploading it. Never attach secrets or proprietary source code.
@@ -35,7 +35,7 @@ body:
     id: version
     attributes:
       label: BugBundle version
-      placeholder: "0.2.0"
+      placeholder: "0.3.0"
     validations:
       required: true
   - type: dropdown
